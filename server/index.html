@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        height: 3rem;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+      }
+      #input:focus {
+        outline: none;
+      }
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+      }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages > li {
+        padding: 0.5rem 1rem;
+      }
+      #messages > li:nth-child(odd) {
+        background: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="inputMessage" autocomplete="off" /><button>Send</button>
+      <input id="inputRoom" autocomplete="off" /><button id="JoinRoom">
+        Join
+      </button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      const userSocket = io("http://localhost:3000/user", {
+        auth: { token: "Tri" },
+      });
+      const form = document.getElementById("form");
+      const input = document.getElementById("inputMessage");
+      const inputRoom = document.getElementById("inputRoom");
+      const messages = document.getElementById("messages");
+      const joinRoom = document.getElementById("JoinRoom");
+
+      socket.on("connect", () => {
+        displayMessage(`You connect with id: ${socket.id}`);
+      });
+
+      userSocket.on("connect_error", (error) => {
+        displayMessage(error);
+      });
+
+      socket.on("receive-message", (message) => {
+        displayMessage(message);
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = input.value;
+        const room = inputRoom.value;
+        if (input.value) {
+          displayMessage(message);
+          socket.emit("chat-message", message, room);
+          input.value = "";
+        }
+      });
+      socket.on("chat-message", (data) => {
+        displayMessage(data.message);
+      });
+
+      joinRoom.addEventListener("click", () => {
+        const room = inputRoom.value;
+        console.log(room);
+        socket.emit("join-room", room, (message) => {
+          displayMessage(message);
+        });
+      });
+
+      function displayMessage(message) {
+        let textMessage = document.createElement("li");
+        textMessage.textContent = message;
+        messages.appendChild(textMessage);
+      }
+
+      let count = 0;
+      setInterval(() => {
+        socket.volatile.emit("ping", ++count);
+        // Nếu không có hàm volatile thì socket sẽ lưu lại
+        // những thông tin chưa được gửi trước đó
+        // Ngược lại thì socket sẽ loại bỏ những thông tin trong 
+        // thời gian disconnect và gửi những thông tin mới 
+        // khi server được connect lại
+      }, 1000);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.target.matches("input")) return;
+
+        if (e.key === "c") socket.connect();
+        if (e.key === "d") socket.disconnect();
+      });
+    </script>
+  </body>
+</html>
