@@ -66,9 +66,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io("http://localhost:3000");
-      const userSocket = io("http://localhost:3000/user", {
-        auth: { token: "Tri" },
-      });
       const form = document.getElementById("form");
       const input = document.getElementById("inputMessage");
       const inputRoom = document.getElementById("inputRoom");
@@ -77,10 +74,6 @@
 
       socket.on("connect", () => {
         displayMessage(`You connect with id: ${socket.id}`);
-      });
-
-      userSocket.on("connect_error", (error) => {
-        displayMessage(error);
       });
 
       socket.on("receive-message", (message) => {
@@ -97,8 +90,8 @@
           input.value = "";
         }
       });
-      socket.on("chat-message", (data) => {
-        displayMessage(data.message);
+      socket.on("chat-message", (message) => {
+        displayMessage(message);
       });
 
       joinRoom.addEventListener("click", () => {
