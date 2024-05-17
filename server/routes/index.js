@@ -1,7 +1,7 @@
 const AuthRoute = require("./auth.routes")
 const MessageRoute = require("./message.route")
 const ConversationRoute = require("./conversation.route")
-const UserRoute = require("./user.route")
+const UserRoute = require("./users.route")
 
 const routes = (app) => {
   app.use("/api/auth", AuthRoute)
