@@ -6,6 +6,7 @@ import Login from '../pages/login/Login';
 import SignUp from '../pages/signup/SignUp';
 import { Toaster } from "react-hot-toast"
 import { Provider } from "react-redux"
+import SocketContextProvider from "../context/SocketContextProvider"
 import {
   createBrowserRouter,
   RouterProvider,
@@ -35,10 +36,12 @@ function AppRouter() {
 
   return <>
     <AuthContext>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </Provider>
+      <SocketContextProvider >
+        <Provider store={store}>
+          <RouterProvider router={router} />
+          <Toaster />
+        </Provider>
+      </SocketContextProvider>
     </AuthContext>
   </>
 }

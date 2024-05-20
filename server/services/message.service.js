@@ -1,5 +1,6 @@
 const Conversation = require("../models/conversation.model")
-const Message = require("../models/message.model")
+const Message = require("../models/message.model");
+const { getReceiverSocketId, io } = require("../socket/socket");
 
 let getMessages = (userToChatId, senderId) => {
   return new Promise(async (res, rej) => {
@@ -43,7 +44,6 @@ let sendMessage = (senderId, receiverId, messageContent) => {
         receiverId,
         message: messageContent,
       })
-      // SOCKET IO FUNCTIONALITY
       // await conversation.save();
       // await newMessage.save();
       // Take the time longer so use Promise.all is perfect
@@ -51,6 +51,14 @@ let sendMessage = (senderId, receiverId, messageContent) => {
         conversation.messages.push(newMessage._id);
       }
       await Promise.all([conversation.save(), newMessage.save()])
+
+      // SOCKET IO FUNCTIONALITY
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if(receiverSocketId) {
+        // io.to("Socket id") send message to specific user
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+      }
+
       res(newMessage);
     } catch (error) {
       rej(error);
