@@ -4,15 +4,17 @@ const { generateToken } = require("../utils/generateToken")
 let loginUser = async (req, res) => {
   const data = req.body;
   const user = await AuthService.authLogin(data);
+  let token;
   if (user.errCode === 0) {
     let { data: userData } = user;
-    let token = generateToken(userData._id);
+    token = generateToken(userData._id);
     await res.cookie("jwt", token, {
       maxAge: 15 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "Strict",
       secure: process.env.NODE_ENV !== "development"
     })
+    console.log("Set cookies");
   }
   res.status(200).json(user);
 }
