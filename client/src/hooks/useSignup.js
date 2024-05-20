@@ -15,7 +15,7 @@ function useSignup() {
     try {
       const res = await instance.post('/api/auth/signup', { fullName, username, password, confirmPassword, gender });
       setLoading(true);
-      const data = await res;
+      const data = res;
       if (data.errCode === 2) throw new Error(data.errMessage)
       if (data.errCode === 1) throw new Error(data.errMessage)
       if (data.errCode === 0) {

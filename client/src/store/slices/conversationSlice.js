@@ -6,8 +6,8 @@ const initialState = {
   isLoading: false,
 }
 
-export const fetchConversation = createAsyncThunk(
-  'conversation/fetchConversation',
+export const fetchUserInConversation = createAsyncThunk(
+  'conversation/fetchUserInConversation',
   async () => {
     try {
       const response = await instance.get('/api/users');
@@ -24,14 +24,14 @@ const conversationSlice = createSlice({
   reducers: {},
   initialState,
   extraReducers: (builder) => {
-    builder.addCase(fetchConversation.pending, (state, action) => {
+    builder.addCase(fetchUserInConversation.pending, (state, action) => {
       state.isLoading = true;
     })
-    builder.addCase(fetchConversation.fulfilled, (state, action) => {
+    builder.addCase(fetchUserInConversation.fulfilled, (state, action) => {
       state.data = action.payload;
       state.isLoading = false;
     })
-    builder.addCase(fetchConversation.rejected, (state, action) => {
+    builder.addCase(fetchUserInConversation.rejected, (state, action) => {
       state.isLoading = false;
     })
   }
