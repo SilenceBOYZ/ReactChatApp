@@ -32,7 +32,7 @@ let authSignup = (userData) => {
           data.data = user;
         }
       }
-      resolve(data)
+      resolve(data);
     } catch (error) {
       reject(error);
     }
