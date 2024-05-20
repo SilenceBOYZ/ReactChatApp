@@ -11,7 +11,7 @@ function useGetConversations() {
       setLoading(true);
       try {
         const res = await instance.get("/api/users");
-        const data = await res;
+        const data = res;
         if (data.error) {
           throw new Error(data.error);
         }

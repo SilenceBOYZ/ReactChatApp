@@ -5,10 +5,12 @@ import Home from '../pages/home/Home';
 import Login from '../pages/login/Login';
 import SignUp from '../pages/signup/SignUp';
 import { Toaster } from "react-hot-toast"
+import { Provider } from "react-redux"
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import store from '../store/store';
 
 const router = createBrowserRouter([
   {
@@ -33,8 +35,10 @@ function AppRouter() {
 
   return <>
     <AuthContext>
+      <Provider store={store}>
         <RouterProvider router={router} />
         <Toaster />
+      </Provider>
     </AuthContext>
   </>
 }
