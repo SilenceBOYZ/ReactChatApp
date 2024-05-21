@@ -17,12 +17,12 @@ function Conversations() {
       {isLoading ?
         <span className="loading loading-spinner mx-auto"></span> :
         <div className="py-2 flex flex-col overflow-auto space-y-2">
-          {data.length < 0 ? <div>NoConversation</div> : data.map((conversation, idx) =>
+          {data?.length < 0 ? <div>NoConversation</div> : data?.map((conversation, idx) =>
             <Conversation
               key={conversation._id}
               infor={conversation}
               emoji={getRandomEmoji()}
-              lastIdx={idx === data.length - 1}
+              lastIdx={idx === data?.length - 1}
             />)}
         </div>
       }
