@@ -13,10 +13,11 @@ let getMessages = (userToChatId, senderId) => {
         path: "messages",
         strictPopulate: false
       });
-      
-      if (!conversation) res([]);
 
-      res(conversation.messages);
+      if (!conversation) { res([]) }
+      else {
+        res(conversation.messages);
+      }
     } catch (error) {
       rej(error)
       console.error("Error from messages services ", error.message);
@@ -54,11 +55,10 @@ let sendMessage = (senderId, receiverId, messageContent) => {
 
       // SOCKET IO FUNCTIONALITY
       const receiverSocketId = getReceiverSocketId(receiverId);
-      if(receiverSocketId) {
+      if (receiverSocketId) {
         // io.to("Socket id") send message to specific user
         io.to(receiverSocketId).emit("newMessage", newMessage);
       }
-
       res(newMessage);
     } catch (error) {
       rej(error);
