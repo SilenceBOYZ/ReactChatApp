@@ -16,7 +16,7 @@ app.use(cors({
   origin: "http://localhost:3000",
   credentials: true
 }))
-app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -24,7 +24,7 @@ app.use(bodyParser.json())
 routes(app);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"))
+  res.sendFile(path.join(__dirname, "../client", "build", "index.html"))
 })
 
 server.listen(PORT, () => {
